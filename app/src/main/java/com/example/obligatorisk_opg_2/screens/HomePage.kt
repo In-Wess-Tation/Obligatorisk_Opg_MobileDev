@@ -2,22 +2,48 @@ package com.example.obligatorisk_opg_2.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 
 @Composable
 fun HomePage(
     onNavigateToListPage: () -> Unit,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
 ) {
     Scaffold { innerPadding ->
+
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold,
+                text = "Welcome to the app"
+            )
+        }
+
+
+
+
         Column(
             modifier = Modifier
                 .padding(innerPadding)
@@ -25,10 +51,35 @@ fun HomePage(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Button(onClick = { onNavigateToListPage() }) {
+            Text(
+                fontSize = 20.sp,
+                text = "Login")
+            OutlinedTextField(
+                value = "",
+                onValueChange = {},
+                modifier = Modifier.padding(16.dp),
+                label = { Text("Username ") },
+                singleLine = true
+            )
+            OutlinedTextField(
+                value = "",
+                onValueChange = {},
+                modifier = Modifier.padding(16.dp),
+                label = { Text("Password ") },
+                singleLine = true
+            )
+            Spacer(modifier = Modifier.padding(4.dp))
+            Button(
+                onClick = { onNavigateToListPage() },
+                Modifier.padding(10.dp)
+            ) {
                 Text("Login")
             }
         }
+
+
+
+
     }
 }
 

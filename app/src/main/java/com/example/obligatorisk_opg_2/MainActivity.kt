@@ -47,6 +47,8 @@ fun MainScreen() {
                 //Be able to navigate to both Edit Pages
                 onNavigateToEditListPage = { navController.navigate(NavRoutes.EditListPage.route) },
                 onNavigateToEditFriendPage = { navController.navigate(NavRoutes.EditFriendPage.route) },
+                onNavigateToHomePage = { navController.navigate(NavRoutes.HomePage.route) },
+                //Navigate back to home page
                 onNavigateBack = { navController.popBackStack() }
             )
         }

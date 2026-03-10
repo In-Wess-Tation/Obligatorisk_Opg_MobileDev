@@ -26,7 +26,7 @@ fun EditListPage(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Button(onClick = { onNavigateToListPage() }) {
-                Text("Edit List")
+                Text("Exit Edit List")
             }
         }
     }

@@ -26,7 +26,7 @@ fun EditFriendPage(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Button(onClick = { onNavigateToListPage() }) {
-                Text("Edit List")
+                Text("Exit Edit Friend")
             }
         }
     }

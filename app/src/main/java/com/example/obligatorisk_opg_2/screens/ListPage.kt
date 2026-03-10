@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 fun ListPage(
     onNavigateToEditListPage: () -> Unit,
     onNavigateToEditFriendPage: () -> Unit,
+    onNavigateToHomePage: () -> Unit,
     onNavigateBack: () -> Unit
 ) {
     Scaffold { innerPadding ->
@@ -30,7 +31,10 @@ fun ListPage(
                 Text("Edit List")
             }
             Button(onClick = { onNavigateToEditFriendPage() }) {
-                Text("Edit List")
+                Text("Edit Friend")
+            }
+            Button(onClick = { onNavigateToHomePage() }) {
+                Text("Log Out")
             }
         }
     }
