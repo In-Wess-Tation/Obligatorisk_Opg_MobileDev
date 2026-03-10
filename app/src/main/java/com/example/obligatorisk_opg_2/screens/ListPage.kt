@@ -119,6 +119,9 @@ fun ListPage(
                 }
             }
 
+
+
+
             // --- Friend Card ---
             Column(
                 modifier = Modifier
