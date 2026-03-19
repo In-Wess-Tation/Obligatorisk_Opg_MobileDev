@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
@@ -22,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -65,27 +65,53 @@ fun ListPage(
             // --- Action Buttons ---
             var searchWord by remember { mutableStateOf("") }
             Column(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(5.dp),
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.Center,
+                        .padding(5.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Button(onClick = { onNavigateToEditListPage() }) {
+                    Button(
+                        onClick = { onNavigateToEditListPage() },
+                        modifier = Modifier
+                            .padding(5.dp, end = 30.dp)
+                            .size(width = 100.dp, height = 40.dp),
+                    ) {
                         Text("Edit List")
                     }
                     OutlinedTextField(
                         value = searchWord,
                         onValueChange = { searchWord = it },
-                        modifier = Modifier.padding(16.dp),
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .size(width = 250.dp, height = 60.dp),
                         label = { Text("Filter...  ") },
                         singleLine = true
                     )
+
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Button(
+                        onClick = { /*TODO*/ },
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .size(width = 100.dp, height = 40.dp),
+                    ) {
+                        Text("Search")
+                    }
                 }
 
+
+                // Check Boxes
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -120,46 +146,46 @@ fun ListPage(
             }
 
 
-
-
             // --- Friend Card ---
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Card(
-                    modifier = Modifier
-                        .size(width = 400.dp, height = 150.dp)
-                ) {
-                    Row(
+                item {
+                    Card(
                         modifier = Modifier
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                            .size(width = 400.dp, height = 150.dp)
                     ) {
-                        Column(
-                            modifier = Modifier,
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        Row(
+                            modifier = Modifier
+                                .padding(16.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                text = "NAME",
-                                fontSize = 25.sp,
-                                modifier = Modifier.padding(horizontal = 20.dp)
-                            )
-                            Button(
-                                onClick = { onNavigateToEditFriendPage() },
-                                modifier = Modifier.padding(horizontal = 0.dp, vertical = 15.dp)
+                            Column(
+                                modifier = Modifier,
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
-                                Text("Edit Friend")
+                                Text(
+                                    text = "NAME",
+                                    fontSize = 25.sp,
+                                    modifier = Modifier.padding(horizontal = 20.dp)
+                                )
+                                Button(
+                                    onClick = { onNavigateToEditFriendPage() },
+                                    modifier = Modifier.padding(horizontal = 0.dp, vertical = 15.dp)
+                                ) {
+                                    Text("Edit Friend")
+                                }
                             }
-                        }
-                        VerticalDivider(modifier = Modifier.padding(all = 10.dp))
-                        Column(modifier = Modifier.padding(horizontal = 5.dp)) {
-                            Text(text = "Birthday: INSERT BIRTHDAY")
-                            Text(text = "Remark: INSERT REMARK")
-                        }
+                            VerticalDivider(modifier = Modifier.padding(all = 10.dp))
+                            Column(modifier = Modifier.padding(horizontal = 5.dp)) {
+                                Text(text = "Birthday: INSERT BIRTHDAY")
+                                Text(text = "Remark: INSERT REMARK")
+                            }
 
+                        }
                     }
                 }
             }

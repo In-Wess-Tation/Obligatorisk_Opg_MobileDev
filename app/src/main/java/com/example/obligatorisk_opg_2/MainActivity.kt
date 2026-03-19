@@ -39,7 +39,6 @@ fun MainScreen() {
             HomePage(
                 // Navigate to List page
                 onNavigateToListPage = { navController.navigate(NavRoutes.ListPage.route) },
-                onNavigateBack = { navController.popBackStack() }
             )
         }
         composable(NavRoutes.ListPage.route) { backstackEntry ->

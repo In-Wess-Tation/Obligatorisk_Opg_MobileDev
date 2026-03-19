@@ -12,7 +12,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,18 +19,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.auth.FirebaseAuth
 
 
 @Composable
 fun HomePage(
     onNavigateToListPage: () -> Unit,
-    onNavigateBack: () -> Unit,
 ) {
     Scaffold { innerPadding ->
 
@@ -45,7 +42,7 @@ fun HomePage(
             Text(
                 fontSize = 50.sp,
                 fontWeight = FontWeight.Bold,
-                text = "My Friendsips",
+                text = "My Friendships",
                 modifier = Modifier.padding(bottom = 16.dp)
             )
             HorizontalDivider(thickness = 2.dp)
@@ -53,9 +50,10 @@ fun HomePage(
         }
 
 
-
-        var username by remember { mutableStateOf("") }
+        val auth = FirebaseAuth.getInstance()
+        var email by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
+        var message by remember { mutableStateOf("") }
         Column(
             modifier = Modifier
                 .padding(innerPadding)
@@ -67,8 +65,8 @@ fun HomePage(
                 fontSize = 30.sp,
                 text = "Login")
             OutlinedTextField(
-                value = username,
-                onValueChange = { username = it },
+                value = email,
+                onValueChange = { email = it },
                 modifier = Modifier.padding(16.dp),
                 label = { Text("Username ") },
                 singleLine = true
@@ -88,20 +86,48 @@ fun HomePage(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = "Register",
-                    textAlign = TextAlign.Left)
-                Button(
-                    onClick = { onNavigateToListPage() },
+                Button(onClick = {
+                    // TODO validate email and password
+                    auth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                message =
+                                    "Sign up successful: ${auth.currentUser?.email ?: "unknown"}"
+                                    onNavigateToListPage()
+                            } else {
+                                message =
+                                    "Sign up failed: ${task.exception?.localizedMessage ?: "unknown error"}"
+                            }
+                        }
+                }) {
+                    Text(text = "Register",
+                        textAlign = TextAlign.Left)
+                }
+                Button(onClick = {
+                    auth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                message = "Log in successful: ${auth.currentUser?.email ?: "unknown"}"
+                                onNavigateToListPage()
+                            } else {
+                                message = "Log in failed: ${task.exception?.localizedMessage ?: "unknown error"}"
+                            }
+                        }
+                },
                     Modifier.padding(10.dp)
                 ) {
-                    Text("Login")
+
+                    Text("Log In")
                 }
             }
-
+            Text(message)
         }
 
 
 
 
-    }
-}
+            }
+
+        }
+
+
