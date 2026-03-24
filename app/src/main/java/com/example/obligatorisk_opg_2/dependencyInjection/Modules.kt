@@ -18,7 +18,7 @@ val appModules = module {
             .addConverterFactory(
                 GsonConverterFactory.create()
             )
-            .baseUrl("https://birthdaysrest.azurewebsites.net/api/")
+            .baseUrl("https://birthdaysrest.azurewebsites.net/api/Persons/")
             .build()
     }
     single { get<Retrofit>().create(BirthdaysAPI::class.java) }

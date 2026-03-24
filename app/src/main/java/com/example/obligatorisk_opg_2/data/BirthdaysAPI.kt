@@ -6,7 +6,7 @@ import retrofit2.http.GET
 
 
 interface BirthdaysAPI {
-    @GET("birthdays")
+    @GET(".")
     suspend fun getBirthdays(): Response<List<Birthday>>
 
 //    @POST("birthdays")

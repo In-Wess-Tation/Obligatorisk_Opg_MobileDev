@@ -1,6 +1,7 @@
 package com.example.obligatorisk_opg_2.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,7 +13,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -152,18 +155,32 @@ fun ListPage(
             }
 
 
-            // --- Friend Card ---
-            LazyColumn(
-                modifier = Modifier
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(birthdayUIState.birthdays) { birthday ->
-                    FriendCard(
-                        onNavigateToEditFriendPage = onNavigateToEditFriendPage,
-                        birthday = birthday
-                    )
+            // --- Content ---
+            if (birthdayUIState.isLoading) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            } else if (birthdayUIState.error != null) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(text = "Error: ${birthdayUIState.error}", color = MaterialTheme.colorScheme.error)
+                }
+            } else if (birthdayUIState.birthdays.isEmpty()) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(text = "No birthdays found.")
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(birthdayUIState.birthdays) { birthday ->
+                        FriendCard(
+                            onNavigateToEditFriendPage = onNavigateToEditFriendPage,
+                            birthday = birthday
+                        )
+                    }
                 }
             }
         }

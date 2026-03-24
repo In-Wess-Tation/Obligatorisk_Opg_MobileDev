@@ -22,12 +22,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.obligatorisk_opg_2.BirthdayUIState
 
 
 @Composable
 fun EditFriendPage(
     onNavigateToListPage: () -> Unit,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    birthdayUIState: BirthdayUIState
 ) {
     Scaffold { innerPadding ->
         Column(
