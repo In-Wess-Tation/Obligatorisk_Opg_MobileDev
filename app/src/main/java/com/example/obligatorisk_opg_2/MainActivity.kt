@@ -14,6 +14,10 @@ import com.example.obligatorisk_opg_2.screens.EditListPage
 import com.example.obligatorisk_opg_2.screens.HomePage
 import com.example.obligatorisk_opg_2.screens.ListPage
 import com.example.obligatorisk_opg_2.ui.theme.Obligatorisk_Opg_2Theme
+import com.example.obligatorisk_opg_2.viewmodel.BirthdayViewModel
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +34,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
+    val birthdayViewModel: BirthdayViewModel = koinViewModel()
+    val uiState by birthdayViewModel.birthdayUIState.collectAsState()
+
 
     NavHost(
         navController = navController,
@@ -43,12 +50,13 @@ fun MainScreen() {
         }
         composable(NavRoutes.ListPage.route) { backstackEntry ->
             ListPage(
+                birthdayUIState = uiState,
                 //Be able to navigate to both Edit Pages
                 onNavigateToEditListPage = { navController.navigate(NavRoutes.EditListPage.route) },
                 onNavigateToEditFriendPage = { navController.navigate(NavRoutes.EditFriendPage.route) },
                 onNavigateToHomePage = { navController.navigate(NavRoutes.HomePage.route) },
                 //Navigate back to home page
-                onNavigateBack = { navController.popBackStack() }
+                onNavigateBack = { navController.popBackStack() },
             )
         }
         composable(NavRoutes.EditListPage.route) {

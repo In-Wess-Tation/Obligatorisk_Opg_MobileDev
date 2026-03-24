@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
@@ -26,6 +27,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.obligatorisk_opg_2.BirthdayUIState
+import com.example.obligatorisk_opg_2.data.Birthday
 
 
 @Composable
@@ -33,10 +36,10 @@ fun ListPage(
     onNavigateToEditListPage: () -> Unit,
     onNavigateToEditFriendPage: () -> Unit,
     onNavigateToHomePage: () -> Unit,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    birthdayUIState: BirthdayUIState
 ) {
     Scaffold { innerPadding ->
-        // Use ONE main Column to stack everything vertically
         Column(
             modifier = Modifier
                 .padding(innerPadding)
@@ -119,25 +122,28 @@ fun ListPage(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column() {
+                    Column {
                         Text(text = "Sort By: ")
 
-                        Row() {
-                            var checked by remember { mutableStateOf(false) }
+                        Row {
+                            var checkedName by remember { mutableStateOf(false) }
+                            var checkedAge by remember { mutableStateOf(false) }
+                            var checkedBirthday by remember { mutableStateOf(false) }
+
                             Text(text = "Name")
                             Checkbox(
-                                checked = checked,
-                                onCheckedChange = { checked = it }
+                                checked = checkedName,
+                                onCheckedChange = { checkedName = it }
                             )
                             Text(text = "Age")
                             Checkbox(
-                                checked = checked,
-                                onCheckedChange = { checked = it }
+                                checked = checkedAge,
+                                onCheckedChange = { checkedAge = it }
                             )
                             Text(text = "Birthday")
                             Checkbox(
-                                checked = checked,
-                                onCheckedChange = { checked = it }
+                                checked = checkedBirthday,
+                                onCheckedChange = { checkedBirthday = it }
                             )
                         }
                         HorizontalDivider(thickness = 2.dp)
@@ -150,44 +156,58 @@ fun ListPage(
             LazyColumn(
                 modifier = Modifier
                     .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                item {
-                    Card(
-                        modifier = Modifier
-                            .size(width = 400.dp, height = 150.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .padding(16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column(
-                                modifier = Modifier,
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                Text(
-                                    text = "NAME",
-                                    fontSize = 25.sp,
-                                    modifier = Modifier.padding(horizontal = 20.dp)
-                                )
-                                Button(
-                                    onClick = { onNavigateToEditFriendPage() },
-                                    modifier = Modifier.padding(horizontal = 0.dp, vertical = 15.dp)
-                                ) {
-                                    Text("Edit Friend")
-                                }
-                            }
-                            VerticalDivider(modifier = Modifier.padding(all = 10.dp))
-                            Column(modifier = Modifier.padding(horizontal = 5.dp)) {
-                                Text(text = "Birthday: INSERT BIRTHDAY")
-                                Text(text = "Remark: INSERT REMARK")
-                            }
-
-                        }
-                    }
+                items(birthdayUIState.birthdays) { birthday ->
+                    FriendCard(
+                        onNavigateToEditFriendPage = onNavigateToEditFriendPage,
+                        birthday = birthday
+                    )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun FriendCard(
+    onNavigateToEditFriendPage: () -> Unit,
+    birthday: Birthday
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .size(height = 150.dp, width = 400.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text = birthday.name,
+                    fontSize = 25.sp,
+                    modifier = Modifier.padding(horizontal = 20.dp)
+                )
+                Button(
+                    onClick = { onNavigateToEditFriendPage() },
+                    modifier = Modifier.padding(horizontal = 0.dp, vertical = 15.dp)
+                ) {
+                    Text("Edit Friend")
+                }
+            }
+            VerticalDivider(modifier = Modifier.padding(all = 10.dp))
+            Column(
+                modifier = Modifier.weight(1.5f).padding(horizontal = 5.dp)
+            ) {
+                Text(text = "Birthday: ${birthday.birthDayOfMonth}/${birthday.birthMonth}/${birthday.birthYear}")
+                Text(text = "Remark: ${birthday.remark}")
             }
         }
     }
