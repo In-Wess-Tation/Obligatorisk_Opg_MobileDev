@@ -61,6 +61,7 @@ fun MainScreen() {
         }
         composable(NavRoutes.EditListPage.route) {
             EditListPage(
+                birthdayUIState = uiState,
                 //Navigate back to list page
                 onNavigateToListPage = { navController.navigate(NavRoutes.ListPage.route) },
                 onNavigateBack = { navController.popBackStack() }
@@ -69,6 +70,7 @@ fun MainScreen() {
         }
         composable(NavRoutes.EditFriendPage.route) {
             EditFriendPage(
+                birthdayUIState = uiState,
                 //Navigate back to list page
                 onNavigateToListPage = { navController.navigate(NavRoutes.ListPage.route) },
                 onNavigateBack = { navController.popBackStack() }
