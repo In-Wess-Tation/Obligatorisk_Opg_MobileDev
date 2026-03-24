@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
@@ -37,7 +36,9 @@ import com.example.obligatorisk_opg_2.data.Birthday
 fun EditListPage(
     onNavigateToListPage: () -> Unit,
     onNavigateBack: () -> Unit,
-    birthdayUIState: BirthdayUIState
+    birthdayUIState: BirthdayUIState,
+    onBirthdayDelete: (Birthday) -> Unit = {},
+    onBirthdayAdd: (Birthday) -> Unit = {}
 ) {
     Scaffold { innerPadding ->
         Column(
@@ -106,11 +107,29 @@ fun EditListPage(
                         value = birthdayInput,
                         onValueChange = { birthdayInput = it },
                         modifier = Modifier.weight(2f),
-                        label = { Text("Birthday") },
+                        label = { Text("Birthday (DD/MM/YYYY)") },
                         singleLine = true
                     )
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            val dateParts = birthdayInput.split("/")
+                            if (dateParts.size == 3 && name.isNotBlank()) {
+                                val newBirthday = Birthday(
+                                    id = 0,
+                                    userId = "currentUser",
+                                    name = name,
+                                    birthDayOfMonth = dateParts[0].toIntOrNull() ?: 1,
+                                    birthMonth = dateParts[1].toIntOrNull() ?: 1,
+                                    birthYear = dateParts[2].toIntOrNull() ?: 2000,
+                                    remarks = remark,
+                                    age = 0
+                                )
+                                onBirthdayAdd(newBirthday)
+                                name = ""
+                                remark = ""
+                                birthdayInput = ""
+                            }
+                        },
                         modifier = Modifier.weight(1f)
                     ) {
                         Text(text = "ADD")
@@ -130,7 +149,8 @@ fun EditListPage(
             ) {
                 items(birthdayUIState.birthdays) { birthdayItem ->
                     FriendCard(
-                        birthday = birthdayItem
+                        birthday = birthdayItem,
+                        onDeleteClick = { onBirthdayDelete(birthdayItem) }
                     )
                 }
             }
@@ -139,7 +159,10 @@ fun EditListPage(
 }
 
 @Composable
-fun FriendCard(birthday: Birthday) {
+fun FriendCard(
+    birthday: Birthday,
+    onDeleteClick: () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -160,7 +183,7 @@ fun FriendCard(birthday: Birthday) {
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = birthday.name,
+                    text = birthday.name ?: "",
                     fontSize = 18.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -182,7 +205,7 @@ fun FriendCard(birthday: Birthday) {
                     maxLines = 1
                 )
                 Text(
-                    text = "Remark: ${birthday.remark}",
+                    text = "Remark: ${birthday.remarks ?: ""}",
                     fontSize = 14.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -199,7 +222,7 @@ fun FriendCard(birthday: Birthday) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Button(
-                    onClick = {/*TO DO*/ },
+                    onClick = onDeleteClick,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Red
                     ),

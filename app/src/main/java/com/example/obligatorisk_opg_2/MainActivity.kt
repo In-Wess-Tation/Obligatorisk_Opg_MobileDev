@@ -36,6 +36,7 @@ fun MainScreen() {
     val navController = rememberNavController()
     val birthdayViewModel: BirthdayViewModel = koinViewModel()
     val uiState by birthdayViewModel.birthdayUIState.collectAsState()
+    val selectedBirthday by birthdayViewModel.selectedBirthday.collectAsState()
 
 
     NavHost(
@@ -53,10 +54,16 @@ fun MainScreen() {
                 birthdayUIState = uiState,
                 //Be able to navigate to both Edit Pages
                 onNavigateToEditListPage = { navController.navigate(NavRoutes.EditListPage.route) },
-                onNavigateToEditFriendPage = { navController.navigate(NavRoutes.EditFriendPage.route) },
+                onNavigateToEditFriendPage = { birthday ->
+                    birthdayViewModel.selectBirthday(birthday)
+                    navController.navigate(NavRoutes.EditFriendPage.route)
+                },
                 onNavigateToHomePage = { navController.navigate(NavRoutes.HomePage.route) },
                 //Navigate back to home page
                 onNavigateBack = { navController.popBackStack() },
+                onFilterSortChange = { query, sortBy ->
+                    birthdayViewModel.filterAndSort(query, sortBy)
+                }
             )
         }
         composable(NavRoutes.EditListPage.route) {
@@ -64,13 +71,16 @@ fun MainScreen() {
                 birthdayUIState = uiState,
                 //Navigate back to list page
                 onNavigateToListPage = { navController.navigate(NavRoutes.ListPage.route) },
-                onNavigateBack = { navController.popBackStack() }
+                onNavigateBack = { navController.popBackStack() },
+                onBirthdayDelete = { birthday -> birthdayViewModel.deleteBirthday(birthday.id) },
+                onBirthdayAdd = { birthday -> birthdayViewModel.addBirthday(birthday) }
             )
 
         }
         composable(NavRoutes.EditFriendPage.route) {
             EditFriendPage(
-                birthdayUIState = uiState,
+                selectedBirthday = selectedBirthday,
+                onUpdateBirthday = { id, birthday -> birthdayViewModel.updateBirthday(id, birthday) },
                 //Navigate back to list page
                 onNavigateToListPage = { navController.navigate(NavRoutes.ListPage.route) },
                 onNavigateBack = { navController.popBackStack() }

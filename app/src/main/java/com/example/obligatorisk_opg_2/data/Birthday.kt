@@ -1,33 +1,29 @@
 package com.example.obligatorisk_opg_2.data
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
 
-@Serializable
 data class Birthday(
-    @SerialName("id")
+    @SerializedName("id")
     val id: Int,
 
-    @SerialName("userId")
-    val userId: String,
+    @SerializedName("userId")
+    val userId: String?,
 
-    @SerialName("name")
-    val name: String,
+    @SerializedName("name")
+    val name: String?,
 
-    @SerialName("birthYear")
+    @SerializedName("birthYear")
     val birthYear: Int,
 
-    @SerialName("birthMonth")
+    @SerializedName("birthMonth")
     val birthMonth: Int,
 
-    @SerialName("birthDayOfMonth")
+    @SerializedName("birthDayOfMonth")
     val birthDayOfMonth: Int,
 
-    @SerialName("remark")
-    val remark: String,
+    @SerializedName("remarks")
+    val remarks: String?,
 
-    @SerialName("age")
+    @SerializedName("age")
     val age: Int
-
-
 )

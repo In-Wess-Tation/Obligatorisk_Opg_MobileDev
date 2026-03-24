@@ -32,15 +32,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.obligatorisk_opg_2.BirthdayUIState
 import com.example.obligatorisk_opg_2.data.Birthday
+import com.example.obligatorisk_opg_2.viewmodel.SortBy
 
 
 @Composable
 fun ListPage(
     onNavigateToEditListPage: () -> Unit,
-    onNavigateToEditFriendPage: () -> Unit,
+    onNavigateToEditFriendPage: (Birthday) -> Unit,
     onNavigateToHomePage: () -> Unit,
     onNavigateBack: () -> Unit,
-    birthdayUIState: BirthdayUIState
+    birthdayUIState: BirthdayUIState,
+    onFilterSortChange: (String, SortBy) -> Unit = { _, _ -> }
 ) {
     Scaffold { innerPadding ->
         Column(
@@ -70,6 +72,8 @@ fun ListPage(
 
             // --- Action Buttons ---
             var searchWord by remember { mutableStateOf("") }
+            var currentSortBy by remember { mutableStateOf(SortBy.NONE) }
+
             Column(
                 modifier = Modifier.padding(5.dp),
             ) {
@@ -90,7 +94,10 @@ fun ListPage(
                     }
                     OutlinedTextField(
                         value = searchWord,
-                        onValueChange = { searchWord = it },
+                        onValueChange = { 
+                            searchWord = it
+                            onFilterSortChange(searchWord, currentSortBy)
+                        },
                         modifier = Modifier
                             .padding(5.dp)
                             .size(width = 250.dp, height = 60.dp),
@@ -107,7 +114,7 @@ fun ListPage(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = { onFilterSortChange(searchWord, currentSortBy) },
                         modifier = Modifier
                             .padding(5.dp)
                             .size(width = 100.dp, height = 40.dp),
@@ -129,24 +136,29 @@ fun ListPage(
                         Text(text = "Sort By: ")
 
                         Row {
-                            var checkedName by remember { mutableStateOf(false) }
-                            var checkedAge by remember { mutableStateOf(false) }
-                            var checkedBirthday by remember { mutableStateOf(false) }
-
                             Text(text = "Name")
                             Checkbox(
-                                checked = checkedName,
-                                onCheckedChange = { checkedName = it }
+                                checked = currentSortBy == SortBy.NAME,
+                                onCheckedChange = { 
+                                    currentSortBy = if (it) SortBy.NAME else SortBy.NONE
+                                    onFilterSortChange(searchWord, currentSortBy)
+                                }
                             )
                             Text(text = "Age")
                             Checkbox(
-                                checked = checkedAge,
-                                onCheckedChange = { checkedAge = it }
+                                checked = currentSortBy == SortBy.AGE,
+                                onCheckedChange = { 
+                                    currentSortBy = if (it) SortBy.AGE else SortBy.NONE
+                                    onFilterSortChange(searchWord, currentSortBy)
+                                }
                             )
                             Text(text = "Birthday")
                             Checkbox(
-                                checked = checkedBirthday,
-                                onCheckedChange = { checkedBirthday = it }
+                                checked = currentSortBy == SortBy.BIRTHDAY,
+                                onCheckedChange = { 
+                                    currentSortBy = if (it) SortBy.BIRTHDAY else SortBy.NONE
+                                    onFilterSortChange(searchWord, currentSortBy)
+                                }
                             )
                         }
                         HorizontalDivider(thickness = 2.dp)
@@ -177,7 +189,7 @@ fun ListPage(
                 ) {
                     items(birthdayUIState.birthdays) { birthday ->
                         FriendCard(
-                            onNavigateToEditFriendPage = onNavigateToEditFriendPage,
+                            onNavigateToEditFriendPage = { onNavigateToEditFriendPage(birthday) },
                             birthday = birthday
                         )
                     }
@@ -208,7 +220,7 @@ private fun FriendCard(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = birthday.name,
+                    text = birthday.name ?: "",
                     fontSize = 25.sp,
                     modifier = Modifier.padding(horizontal = 20.dp)
                 )
@@ -224,7 +236,7 @@ private fun FriendCard(
                 modifier = Modifier.weight(1.5f).padding(horizontal = 5.dp)
             ) {
                 Text(text = "Birthday: ${birthday.birthDayOfMonth}/${birthday.birthMonth}/${birthday.birthYear}")
-                Text(text = "Remark: ${birthday.remark}")
+                Text(text = "Remark: ${birthday.remarks ?: ""}")
             }
         }
     }
