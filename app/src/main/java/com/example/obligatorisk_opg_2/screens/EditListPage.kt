@@ -116,7 +116,7 @@ fun EditListPage(
                             if (dateParts.size == 3 && name.isNotBlank()) {
                                 val newBirthday = Birthday(
                                     id = 0,
-                                    userId = "currentUser",
+                                    userId = "testuser4@gmail.com",
                                     name = name,
                                     birthDayOfMonth = dateParts[0].toIntOrNull() ?: 1,
                                     birthMonth = dateParts[1].toIntOrNull() ?: 1,

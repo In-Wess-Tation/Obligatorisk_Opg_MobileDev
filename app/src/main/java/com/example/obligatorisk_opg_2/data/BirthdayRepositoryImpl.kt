@@ -30,6 +30,29 @@ class BirthdayRepositoryImpl(
         }
     }
 
+    override suspend fun getBirthdays(userId: String): NetworkResult<List<Birthday>> {
+        return withContext(dispatcher) {
+            try {
+                val response = birthdatAPI.getBirthdays(userId)
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    if (body != null) {
+                        NetworkResult.Success(body)
+                    } else {
+                        NetworkResult.Error("Response body is null")
+                    }
+                } else {
+                    NetworkResult.Error(response.message())
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                NetworkResult.Error(e.message ?: "Unknown error")
+            }
+        }
+    }
+
+
     override suspend fun deleteBirthday(birthdayId: Int): NetworkResult<Birthday> {
         return withContext(dispatcher) {
             try {

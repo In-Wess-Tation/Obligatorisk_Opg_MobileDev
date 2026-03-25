@@ -35,7 +35,7 @@ class BirthdayViewModel (
     private var currentSortBy: SortBy = SortBy.NONE
 
     init {
-        getBirthdays()
+        getBirthdays(userId = "testuser4@gmail.com")
     }
 
     fun selectBirthday(birthday: Birthday) {
@@ -46,6 +46,24 @@ class BirthdayViewModel (
         _birthdayUIState.update {it.copy(isLoading = true, error = null) }
         viewModelScope.launch {
             when (val result = BirthdayRepository.getBirthdays()) {
+                is NetworkResult.Success -> {
+                    originalBirthdayList = result.data
+                    applyFilterAndSort()
+                }
+
+                is NetworkResult.Error -> {
+                    _birthdayUIState.update {
+                        it.copy(isLoading = false, error = result.error)
+                    }
+                }
+            }
+        }
+    }
+
+    fun getBirthdays(userId: String) {
+        _birthdayUIState.update {it.copy(isLoading = true, error = null) }
+        viewModelScope.launch {
+            when (val result = BirthdayRepository.getBirthdays(userId)) {
                 is NetworkResult.Success -> {
                     originalBirthdayList = result.data
                     applyFilterAndSort()
@@ -96,7 +114,7 @@ class BirthdayViewModel (
                     _singleBirthdayUIState.update {
                         it.copy(isLoading = false, birthday = result.data)
                     }
-                    getBirthdays()
+                    getBirthdays(userId = "testuser4@gmail.com")
                 }
 
                 is NetworkResult.Error -> {
@@ -116,7 +134,7 @@ class BirthdayViewModel (
                     _singleBirthdayUIState.update {
                         it.copy(isLoading = false, birthday = result.data)
                     }
-                    getBirthdays()
+                    getBirthdays(userId = "testuser4@gmail.com")
                 }
 
                 is NetworkResult.Error -> {
@@ -136,7 +154,7 @@ class BirthdayViewModel (
                     _singleBirthdayUIState.update {
                         it.copy(isLoading = false, birthday = result.data)
                     }
-                    getBirthdays()
+                    getBirthdays(userId = "testuser4@gmail.com")
                 }
 
                 is NetworkResult.Error -> {

@@ -8,11 +8,15 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 
 interface BirthdaysAPI {
     @GET(".")
     suspend fun getBirthdays(): Response<List<Birthday>>
+
+    @GET(".")
+    suspend fun getBirthdays(@Query("user_id") userId: String): Response<List<Birthday>>
 
     @POST(".")
     suspend fun addBirthday(@Body birthday: Birthday): Response<Birthday>
