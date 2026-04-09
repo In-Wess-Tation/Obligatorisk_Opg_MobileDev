@@ -29,6 +29,11 @@ import com.google.firebase.auth.FirebaseAuth
 @Composable
 fun HomePage(
     onNavigateToListPage: () -> Unit,
+    onLogin: (email: String, password: String) -> Unit = { _, _ -> },
+    onRegister: (email: String, password: String) -> Unit = { _, _ -> },
+    user: String? = null,
+    message: String = "",
+    onLogOut: () -> Unit = {}
 ) {
     Scaffold { innerPadding ->
         var email by remember { mutableStateOf("") }
@@ -93,15 +98,17 @@ fun HomePage(
                 ) {
                     Button(onClick = {
                         if (email.isNotBlank() && password.isNotBlank()) {
-                            auth.createUserWithEmailAndPassword(email, password)
-                                .addOnCompleteListener { task ->
-                                    if (task.isSuccessful) {
-                                        message = "Sign up successful: ${auth.currentUser?.email ?: "unknown"}"
-                                        onNavigateToListPage()
-                                    } else {
-                                        message = "Sign up failed: ${task.exception?.localizedMessage ?: "unknown error"}"
-                                    }
-                                }
+                            onLogin(email, password)
+                            onNavigateToListPage()
+//                            auth.createUserWithEmailAndPassword(email, password)
+//                                .addOnCompleteListener { task ->
+//                                    if (task.isSuccessful) {
+//                                        message = "Sign up successful: ${auth.currentUser?.email ?: "unknown"}"
+//                                        onNavigateToListPage()
+//                                    } else {
+//                                        message = "Sign up failed: ${task.exception?.localizedMessage ?: "unknown error"}"
+//                                    }
+//                                }
                         } else {
                             message = "Email and password cannot be empty"
                         }
@@ -111,15 +118,17 @@ fun HomePage(
                     Button(
                         onClick = {
                             if (email.isNotBlank() && password.isNotBlank()) {
-                                auth.signInWithEmailAndPassword(email, password)
-                                    .addOnCompleteListener { task ->
-                                        if (task.isSuccessful) {
-                                            message = "Log in successful: ${auth.currentUser?.email ?: "unknown"}"
-                                            onNavigateToListPage()
-                                        } else {
-                                            message = "Log in failed: ${task.exception?.localizedMessage ?: "unknown error"}"
-                                        }
-                                    }
+                                onRegister(email, password)
+                                onNavigateToListPage()
+//                                auth.signInWithEmailAndPassword(email, password)
+//                                    .addOnCompleteListener { task ->
+//                                        if (task.isSuccessful) {
+//                                            message = "Log in successful: ${auth.currentUser?.email ?: "unknown"}"
+//                                            onNavigateToListPage()
+//                                        } else {
+//                                            message = "Log in failed: ${task.exception?.localizedMessage ?: "unknown error"}"
+//                                        }
+//                                    }
                             } else {
                                 message = "Email and password cannot be empty"
                             }

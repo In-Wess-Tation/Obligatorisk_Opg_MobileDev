@@ -37,7 +37,7 @@ fun EditListPage(
     onNavigateToListPage: () -> Unit,
     onNavigateBack: () -> Unit,
     birthdayUIState: BirthdayUIState,
-    onBirthdayDelete: (Birthday) -> Unit = {},
+    onBirthdayDelete: (Int, String) -> Unit = { _, _ -> },
     onBirthdayAdd: (Birthday) -> Unit = {}
 ) {
     Scaffold { innerPadding ->
@@ -150,7 +150,7 @@ fun EditListPage(
                 items(birthdayUIState.birthdays) { birthdayItem ->
                     FriendCard(
                         birthday = birthdayItem,
-                        onDeleteClick = { onBirthdayDelete(birthdayItem) }
+                        onDeleteClick = { onBirthdayDelete(birthdayItem.id, birthdayItem.userId) }
                     )
                 }
             }

@@ -1,5 +1,6 @@
 package com.example.obligatorisk_opg_2.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.obligatorisk_opg_2.BirthdayUIState
@@ -34,9 +35,9 @@ class BirthdayViewModel (
     private var currentSearchQuery: String = ""
     private var currentSortBy: SortBy = SortBy.NONE
 
-    init {
-        getBirthdays(userId = "testuser4@gmail.com")
-    }
+//    init {
+//        getBirthdays(userId = birthdayUIState.value.birthdays[0].userId)
+//    }
 
     fun selectBirthday(birthday: Birthday) {
         _selectedBirthday.value = birthday
@@ -61,6 +62,7 @@ class BirthdayViewModel (
     }
 
     fun getBirthdays(userId: String) {
+        Log.d("BirthdayViewModel", "getBirthdays called with userId: $userId")
         _birthdayUIState.update {it.copy(isLoading = true, error = null) }
         viewModelScope.launch {
             when (val result = BirthdayRepository.getBirthdays(userId)) {
@@ -106,7 +108,7 @@ class BirthdayViewModel (
         }
     }
 
-    fun deleteBirthday(birthdayId: Int) {
+    fun deleteBirthday(birthdayId: Int, userId: String) {
         _singleBirthdayUIState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             when (val result = BirthdayRepository.deleteBirthday( birthdayId )) {
@@ -114,7 +116,7 @@ class BirthdayViewModel (
                     _singleBirthdayUIState.update {
                         it.copy(isLoading = false, birthday = result.data)
                     }
-                    getBirthdays(userId = "testuser4@gmail.com")
+                    getBirthdays(userId = userId)
                 }
 
                 is NetworkResult.Error -> {
@@ -134,7 +136,7 @@ class BirthdayViewModel (
                     _singleBirthdayUIState.update {
                         it.copy(isLoading = false, birthday = result.data)
                     }
-                    getBirthdays(userId = "testuser4@gmail.com")
+                    getBirthdays(userId = birthday.userId)
                 }
 
                 is NetworkResult.Error -> {
@@ -154,7 +156,7 @@ class BirthdayViewModel (
                     _singleBirthdayUIState.update {
                         it.copy(isLoading = false, birthday = result.data)
                     }
-                    getBirthdays(userId = "testuser4@gmail.com")
+                    getBirthdays(userId = birthday.userId)
                 }
 
                 is NetworkResult.Error -> {

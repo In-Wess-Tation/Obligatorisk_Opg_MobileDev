@@ -7,7 +7,7 @@ data class Birthday(
     val id: Int,
 
     @SerializedName("userId")
-    val userId: String?,
+    val userId: String,
 
     @SerializedName("name")
     val name: String?,
