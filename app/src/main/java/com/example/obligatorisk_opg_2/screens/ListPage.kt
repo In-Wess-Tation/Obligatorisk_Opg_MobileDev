@@ -37,11 +37,13 @@ import com.example.obligatorisk_opg_2.viewmodel.SortBy
 
 @Composable
 fun ListPage(
+    userEmail: String? = null,
     onNavigateToEditListPage: () -> Unit = {},
-    onNavigateToEditFriendPage: (Birthday) -> Unit = {_, -> },
+    onNavigateToEditFriendPage: (Birthday) -> Unit = {},
     birthdayUIState: BirthdayUIState,
     onFilterSortChange: (String, SortBy) -> Unit = { _, _ -> },
-    onLogOut: () -> Unit = {}
+    onLogOut: () -> Unit = {},
+    OnNavigateToHomePage: () -> Unit = {}
 ) {
     Scaffold { innerPadding ->
         Column(
@@ -58,11 +60,11 @@ fun ListPage(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "UserName",
+                    text = userEmail ?: "Unknown User",
                     textDecoration = TextDecoration.Underline,
                     fontSize = 30.sp
                 )
-                Button(onClick = { onLogOut() }) {
+                Button(onClick = { onLogOut(); OnNavigateToHomePage() }) {
                     Text("Log Out")
                 }
             }
