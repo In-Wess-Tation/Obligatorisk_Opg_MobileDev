@@ -71,7 +71,7 @@ fun MainScreen() {
                     birthdayViewModel.selectBirthday(birthday)
                     navController.navigate(NavRoutes.EditFriendPage.route)
                 },
-                OnNavigateToHomePage = { navController.navigate(NavRoutes.HomePage.route) },
+                onNavigateToHomePage = { navController.navigate(NavRoutes.HomePage.route) },
                 onLogOut = { authViewModel.signOut() },
                 onFilterSortChange = { query, sortBy ->
                     birthdayViewModel.filterAndSort(query, sortBy)

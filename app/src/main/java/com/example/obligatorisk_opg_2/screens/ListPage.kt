@@ -43,7 +43,7 @@ fun ListPage(
     birthdayUIState: BirthdayUIState,
     onFilterSortChange: (String, SortBy) -> Unit = { _, _ -> },
     onLogOut: () -> Unit = {},
-    OnNavigateToHomePage: () -> Unit = {}
+    onNavigateToHomePage: () -> Unit = {}
 ) {
     Scaffold { innerPadding ->
         Column(
@@ -64,7 +64,7 @@ fun ListPage(
                     textDecoration = TextDecoration.Underline,
                     fontSize = 30.sp
                 )
-                Button(onClick = { onLogOut(); OnNavigateToHomePage() }) {
+                Button(onClick = { onLogOut(); onNavigateToHomePage() }) {
                     Text("Log Out")
                 }
             }
