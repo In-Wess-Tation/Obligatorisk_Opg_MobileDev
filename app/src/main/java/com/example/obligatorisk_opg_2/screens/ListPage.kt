@@ -60,9 +60,9 @@ fun ListPage(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = userEmail ?: "Unknown User",
+                    text = userEmail ?: birthdayUIState.birthdays[0].userId ?: "",
                     textDecoration = TextDecoration.Underline,
-                    fontSize = 30.sp
+                    fontSize = 25.sp
                 )
                 Button(onClick = { onLogOut(); onNavigateToHomePage() }) {
                     Text("Log Out")
