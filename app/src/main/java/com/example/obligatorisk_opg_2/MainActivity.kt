@@ -42,10 +42,22 @@ fun MainScreen() {
     val selectedBirthday by birthdayViewModel.selectedBirthday.collectAsState()
     val authViewModel: AuthViewModel = viewModel()
 
-    // Refresh birthdays when user is logged in
-    LaunchedEffect(authViewModel.user?.email) {
-        authViewModel.user?.email?.let { email ->
-            birthdayViewModel.getBirthdays(email)
+    // Handle Navigation based on Auth State
+    LaunchedEffect(authViewModel.user) {
+        if (authViewModel.user != null) {
+            // User just logged in: Go to List
+            navController.navigate(NavRoutes.ListPage.route) {
+                popUpTo(NavRoutes.HomePage.route) { inclusive = true }
+            }
+            // Fetch birthdays for the logged-in user
+            authViewModel.user?.email?.let { email ->
+                birthdayViewModel.getBirthdays(email)
+            }
+        } else {
+            // User logged out: Go to Home
+            navController.navigate(NavRoutes.HomePage.route) {
+                popUpTo(0) { inclusive = true }
+            }
         }
     }
 
@@ -55,23 +67,21 @@ fun MainScreen() {
     ) {
         composable(NavRoutes.HomePage.route) {
             HomePage(
-                user = authViewModel.user?.email,
                 message = authViewModel.message,
-                onNavigateToListPage = { navController.navigate(NavRoutes.ListPage.route) },
                 onLogin = { email, password -> authViewModel.signIn(email, password) },
-                onRegister = { email, password -> authViewModel.register(email, password) },
-                onLogOut = { authViewModel.signOut() }
+                onRegister = { email, password -> authViewModel.register(email, password) }
             )
         }
         composable(NavRoutes.ListPage.route) {
             ListPage(
+                userEmail = authViewModel.user?.email ?: authViewModel.user?.uid,
                 birthdayUIState = uiState,
                 onNavigateToEditListPage = { navController.navigate(NavRoutes.EditListPage.route) },
                 onNavigateToEditFriendPage = { birthday ->
                     birthdayViewModel.selectBirthday(birthday)
                     navController.navigate(NavRoutes.EditFriendPage.route)
                 },
-                onNavigateToHomePage = { navController.navigate(NavRoutes.HomePage.route) },
+                onNavigateToHomePage = { /* Handled by LaunchedEffect */ },
                 onLogOut = { authViewModel.signOut() },
                 onFilterSortChange = { query, sortBy ->
                     birthdayViewModel.filterAndSort(query, sortBy)

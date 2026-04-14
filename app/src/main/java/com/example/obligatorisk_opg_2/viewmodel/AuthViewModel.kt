@@ -13,43 +13,35 @@ class AuthViewModel : ViewModel() {
     var user: FirebaseUser? by mutableStateOf(auth.currentUser)
     var message by mutableStateOf("")
 
-
-
     fun signIn(email: String, password: String) {
-
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     user = auth.currentUser
-                    message = "Sign up successful: ${auth.currentUser?.email ?: "unknown"}"
-
+                    message = "Login successful"
                 } else {
                     user = null
-                    message = "Sign up failed: ${task.exception?.localizedMessage ?: "unknown error"}"
+                    message = "Login failed: ${task.exception?.localizedMessage ?: "unknown error"}"
                 }
             }
     }
 
+    fun signOut() {
+        auth.signOut()
+        user = null
+        message = "Logged out"
+    }
 
-        fun signOut() {
-            user = null
-            auth.signOut()
-        }
-
-
-        fun register(email: String, password: String) {
-            auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        user = auth.currentUser
-                        message = "Log in successful: ${auth.currentUser?.email ?: "unknown"}"
-                    } else {
-                        user = null
-                        message = "Log in failed: ${task.exception?.localizedMessage ?: "unknown error"}"
-                    }
+    fun register(email: String, password: String) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    user = auth.currentUser
+                    message = "Registration successful"
+                } else {
+                    user = null
+                    message = "Registration failed: ${task.exception?.localizedMessage ?: "unknown error"}"
                 }
-        }
-
-
-
+            }
+    }
 }

@@ -24,22 +24,17 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun HomePage(
-    onNavigateToListPage: () -> Unit,
     onLogin: (email: String, password: String) -> Unit = { _, _ -> },
     onRegister: (email: String, password: String) -> Unit = { _, _ -> },
-    user: String? = null,
-    message: String = "",
-    onLogOut: () -> Unit = {}
+    message: String = ""
 ) {
     Scaffold { innerPadding ->
         var email by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
-        var message by remember { mutableStateOf("") }
-        val auth = FirebaseAuth.getInstance()
+        var localError by remember { mutableStateOf("") }
 
         Column(
             modifier = Modifier
@@ -71,13 +66,13 @@ fun HomePage(
             ) {
                 Text(
                     fontSize = 30.sp,
-                    text = "Login"
+                    text = "Login / Register"
                 )
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
                     modifier = Modifier.padding(16.dp),
-                    label = { Text("Username") },
+                    label = { Text("Email") },
                     singleLine = true
                 )
                 OutlinedTextField(
@@ -98,39 +93,21 @@ fun HomePage(
                 ) {
                     Button(onClick = {
                         if (email.isNotBlank() && password.isNotBlank()) {
-                            onLogin(email, password)
-                            onNavigateToListPage()
-//                            auth.createUserWithEmailAndPassword(email, password)
-//                                .addOnCompleteListener { task ->
-//                                    if (task.isSuccessful) {
-//                                        message = "Sign up successful: ${auth.currentUser?.email ?: "unknown"}"
-//                                        onNavigateToListPage()
-//                                    } else {
-//                                        message = "Sign up failed: ${task.exception?.localizedMessage ?: "unknown error"}"
-//                                    }
-//                                }
+                            onRegister(email, password)
+                            localError = ""
                         } else {
-                            message = "Email and password cannot be empty"
+                            localError = "Email and password cannot be empty"
                         }
                     }) {
-                        Text(text = "Register", textAlign = TextAlign.Left)
+                        Text("Register")
                     }
                     Button(
                         onClick = {
                             if (email.isNotBlank() && password.isNotBlank()) {
-                                onRegister(email, password)
-                                onNavigateToListPage()
-//                                auth.signInWithEmailAndPassword(email, password)
-//                                    .addOnCompleteListener { task ->
-//                                        if (task.isSuccessful) {
-//                                            message = "Log in successful: ${auth.currentUser?.email ?: "unknown"}"
-//                                            onNavigateToListPage()
-//                                        } else {
-//                                            message = "Log in failed: ${task.exception?.localizedMessage ?: "unknown error"}"
-//                                        }
-//                                    }
+                                onLogin(email, password)
+                                localError = ""
                             } else {
-                                message = "Email and password cannot be empty"
+                                localError = "Email and password cannot be empty"
                             }
                         },
                         modifier = Modifier.padding(10.dp)
@@ -139,7 +116,7 @@ fun HomePage(
                     }
                 }
                 Text(
-                    text = message,
+                    text = if (localError.isNotBlank()) localError else message,
                     modifier = Modifier.padding(16.dp),
                     textAlign = TextAlign.Center
                 )

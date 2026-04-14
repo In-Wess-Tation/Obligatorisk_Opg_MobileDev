@@ -43,13 +43,14 @@ fun ListPage(
     birthdayUIState: BirthdayUIState,
     onFilterSortChange: (String, SortBy) -> Unit = { _, _ -> },
     onLogOut: () -> Unit = {},
-    onNavigateToHomePage: () -> Unit = {}
+    onNavigateToHomePage: () -> Unit = {},
 ) {
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .fillMaxSize()
+                .fillMaxSize(),
+
         ) {
             // --- Header ---
             Row(
@@ -60,7 +61,7 @@ fun ListPage(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = userEmail ?: birthdayUIState.birthdays[0].userId ?: "",
+                    text = userEmail ?: "No email found",
                     textDecoration = TextDecoration.Underline,
                     fontSize = 25.sp
                 )
