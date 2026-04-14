@@ -91,6 +91,7 @@ fun MainScreen() {
         composable(NavRoutes.EditListPage.route) {
             EditListPage(
                 birthdayUIState = uiState,
+                userId = authViewModel.user?.email ?: authViewModel.user?.uid ?: "",
                 onNavigateToListPage = { navController.navigate(NavRoutes.ListPage.route) },
                 onNavigateBack = { navController.popBackStack() },
                 onBirthdayDelete = { id, userId -> 

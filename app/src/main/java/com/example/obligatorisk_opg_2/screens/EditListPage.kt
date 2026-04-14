@@ -36,6 +36,7 @@ import com.example.obligatorisk_opg_2.data.Birthday
 fun EditListPage(
     onNavigateToListPage: () -> Unit,
     onNavigateBack: () -> Unit,
+    userId: String,
     birthdayUIState: BirthdayUIState,
     onBirthdayDelete: (Int, String) -> Unit = { _, _ -> },
     onBirthdayAdd: (Birthday) -> Unit = {}
@@ -116,7 +117,7 @@ fun EditListPage(
                             if (dateParts.size == 3 && name.isNotBlank()) {
                                 val newBirthday = Birthday(
                                     id = 0,
-                                    userId = "testuser4@gmail.com",
+                                    userId = userId,
                                     name = name,
                                     birthDayOfMonth = dateParts[0].toIntOrNull() ?: 1,
                                     birthMonth = dateParts[1].toIntOrNull() ?: 1,
